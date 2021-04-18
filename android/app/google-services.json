@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "966252349287",
+    "project_id": "inviq-482dc",
+    "storage_bucket": "inviq-482dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:966252349287:android:766fed841ec18f1d3091c2",
+        "android_client_info": {
+          "package_name": "com.InviQ.InviQ"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "966252349287-c5eijqgf8ru7ciq12i8allob7p15cais.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.InviQ.InviQ",
+            "certificate_hash": "7756ece3497c0547a7e13c3aaf0474fff71354d8"
+          }
+        },
+        {
+          "client_id": "966252349287-nasj7dvleefouhkrnghbic0js619bp07.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl_rCEfgrmkJnW4LpuCNbH2tx5KKpxkD0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966252349287-nasj7dvleefouhkrnghbic0js619bp07.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
