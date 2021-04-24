@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Event {
@@ -24,4 +25,16 @@ class Event {
     this.invitationType,
     this.notes,
   );
+
+  Event.fromSnapshot(DocumentSnapshot snapshot)
+      : eventName = snapshot['eventName'],
+        eventType = snapshot['eventType'],
+        eventStartDate = DateTime.parse(snapshot['eventStartDate']),
+        eventStartTime = TimeOfDay(hour:13, minute:08),
+        eventEndDate = DateTime.parse(snapshot['eventEndDate']),
+        eventEndTime = TimeOfDay(hour:13, minute:08),
+        eventLocation = snapshot['eventLocation'],
+        numberOfGuests = snapshot['numberOfGuests'],
+        invitationType = snapshot['invitationType'],
+        notes = snapshot['notes'];
 }

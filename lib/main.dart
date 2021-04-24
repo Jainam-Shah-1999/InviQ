@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/Views/Dashboard.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_application_1/Service/Auth_Service.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,32 +22,17 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
 class _MyHomePageState extends State<MyHomePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = new GoogleSignIn();
-
-  Future<FirebaseUser> _signIn() async {
-    GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-    GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
-
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-        idToken: gSA.idToken, accessToken: gSA.accessToken);
-
-    AuthResult authResults = await _auth.signInWithCredential(credential);
-
-    FirebaseUser user = authResults.user;
-
-    assert(!user.isAnonymous);
-    assert(await user.getIdToken() != null);
-    FirebaseUser currentUser = await _auth.currentUser();
-    assert(user.uid == currentUser.uid);
-    Navigator.push(
+AuthService auth = new AuthService();
+void redirect() async {
+  FirebaseUser currentUser = await _firebaseAuth.currentUser();
+  Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (BuildContext context) => new Dashboard(user)));
-    return user;
-  }
+            builder: (BuildContext context) => new Dashboard(currentUser)));
+}
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             SizedBox(height: 48.0),
             new ElevatedButton(
-              onPressed: () => _signIn(),
+              onPressed: () => auth.signInWithGoogle().then((value) => redirect()),
               child: new Text("Login with Google"),
             ),
           ],

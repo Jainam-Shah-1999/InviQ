@@ -26,7 +26,6 @@ class _CreateEventPageState extends State<CreateEventPage> {
   TimeOfDay selectedStartTime = TimeOfDay.now();
   TimeOfDay selectedEndTime = TimeOfDay.now();
 
-
   Future<Null> _selectStartDate(BuildContext context) async {
     final DateTime startDatepicked = await showDatePicker(
         context: context,
@@ -40,22 +39,24 @@ class _CreateEventPageState extends State<CreateEventPage> {
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
-  final TimeOfDay pickedStartTime = await showTimePicker(
-    context: context,
-    initialTime: selectedStartTime, builder: (BuildContext context, Widget child) {
-       return MediaQuery(
-         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-        child: child,
-      );});
+    final TimeOfDay pickedStartTime = await showTimePicker(
+        context: context,
+        initialTime: selectedStartTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        });
 
-if (pickedStartTime != null && pickedStartTime != selectedStartTime )
-  setState(() {
-    selectedStartTime = pickedStartTime;
-  });
-}
+    if (pickedStartTime != null && pickedStartTime != selectedStartTime)
+      setState(() {
+        selectedStartTime = pickedStartTime;
+      });
+  }
 
   Future<Null> _selectEndDate(BuildContext context) async {
-      final DateTime endDatepicked = await showDatePicker(
+    final DateTime endDatepicked = await showDatePicker(
         context: context,
         initialDate: minDate,
         firstDate: minDate,
@@ -67,27 +68,31 @@ if (pickedStartTime != null && pickedStartTime != selectedStartTime )
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
-  final TimeOfDay pickedEndTime = await showTimePicker(
-    context: context,
-    initialTime: selectedEndTime, builder: (BuildContext context, Widget child) {
-       return MediaQuery(
-         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-        child: child,
-      );});
+    final TimeOfDay pickedEndTime = await showTimePicker(
+        context: context,
+        initialTime: selectedEndTime,
+        builder: (BuildContext context, Widget child) {
+          return MediaQuery(
+            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+            child: child,
+          );
+        });
 
-if (pickedEndTime != null && pickedEndTime != selectedEndTime )
-  setState(() {
-    selectedEndTime = pickedEndTime;
-  });
-}
+    if (pickedEndTime != null && pickedEndTime != selectedEndTime)
+      setState(() {
+        selectedEndTime = pickedEndTime;
+      });
+  }
 
 // DD Menu for event type
   String eventTypeValue = 'BirthDay';
 
   @override
   Widget build(BuildContext context) {
-    final documentReference =
-        Firestore.instance.collection('InviQ').document('user').collection(user.email).document('event');
+    final documentReference = Firestore.instance
+        .collection('InviQ')
+        .document(user.email)
+        .collection('event');
     TextEditingController eventName = new TextEditingController();
     TextEditingController eventStartDate = new TextEditingController();
     TextEditingController eventStartTime = new TextEditingController();
@@ -97,34 +102,16 @@ if (pickedEndTime != null && pickedEndTime != selectedEndTime )
     TextEditingController numberOfGuests = new TextEditingController();
     TextEditingController invitationType = new TextEditingController();
     TextEditingController notes = new TextEditingController();
-        eventStartDate.text = "${selectedStartDate.day}-${selectedStartDate.month}-${selectedStartDate.year}";
-        eventStartTime.text = selectedStartTime.toString();
-        eventEndDate.text = selectedEndDate.toString();
-        eventEndTime.text = selectedEndTime.toString();
-    documentReference.get().then((datasnapshot) {
-      if (datasnapshot.exists) {
-        // eventName.text = event.eventName;
-        // eventType.text = event.eventType;
-        // eventStartDate.text = event.eventStartDate.toString();
-        // eventEndDate.text = event.eventEndDate.toString();
-        // eventLocation.text = event.eventLocation;
-        // numberOfGuests.text = event.numberOfGuests;
-        // invitationType.text = event.invitationType;
-        // notes.text = event.notes;
-        var startdate = selectedStartDate.toString().substring(0,10);
-        var date = datasnapshot.data['eventStartDate'].toString().substring(0,10);
-        var time = selectedStartTime.toString().substring(10, 15);
-        eventName.text = datasnapshot.data['eventName'];
-        eventStartDate.text = date == startdate ? date : startdate;
-        eventStartTime.text = time;
-        eventEndDate.text = selectedEndDate.toString();
-        eventEndTime.text = selectedEndTime.toString();
-        eventLocation.text = datasnapshot.data['eventLocation'];
-        numberOfGuests.text = datasnapshot.data['numberOfGuests'];
-        invitationType.text = datasnapshot.data['invitationType'];
-        notes.text = datasnapshot.data['notes'];
-      }
-    });
+        var selectedstartdate = selectedStartDate.toString().substring(0, 10);
+        var selectedstarttime = selectedStartTime.toString().substring(10, 15);
+        var selectedenddate = selectedEndDate.toString().substring(0, 10);
+        var selectedendtime = selectedEndTime.toString().substring(10, 15);
+
+        eventStartDate.text = selectedstartdate;
+        eventStartTime.text = selectedstarttime;
+        eventEndDate.text = selectedenddate;
+        eventEndTime.text = selectedendtime;
+
     void _submitForm() {
       if (_formKey.currentState.validate()) {
         Map<String, String> data = <String, String>{
@@ -139,18 +126,16 @@ if (pickedEndTime != null && pickedEndTime != selectedEndTime )
           "invitationType": invitationType.text,
           "notes": notes.text,
         };
-        documentReference.setData(data).whenComplete(() {
-          print("document Added!");
-        }).catchError((e) => print(e));
+        try {
+          documentReference.add(data).whenComplete(() {
+            print("document Added!");
+            Navigator.of(context).pop();
+          });
+        } on Exception {
+          print(Exception);
+        }
       }
     }
-
-    void _deleteEvent() {
-      documentReference.delete().whenComplete(() {
-        print("document deleted!");
-      }).catchError((e) => print(e));
-    }
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Add Event'),
@@ -183,117 +168,114 @@ if (pickedEndTime != null && pickedEndTime != selectedEndTime )
                   ),
                 ),
                 Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DropdownButtonFormField(
+                      hint: Text('Hello'),
+                      value: eventTypeValue,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          eventTypeValue = newValue;
+                        });
+                      },
+                      items: <String>['BirthDay', 'Wedding', 'Party']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      decoration: InputDecoration(
+                        labelText: 'Event Type',
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20.0)),
+                      ),
+                    )),
+                Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: DropdownButtonFormField(
-                  hint: Text('Hello'),
-                  value: eventTypeValue,
-                  onChanged: (String newValue) {
-                  setState(() {
-                    eventTypeValue = newValue;
-                  });
-                  },
-                  items: <String>['BirthDay', 'Wedding', 'Party']
-                .map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-                          labelText: 'Event Type',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      new Flexible(
+                        child: TextFormField(
+                          readOnly: true,
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return 'Event start date cannot be empty';
+                            }
+                            return null;
+                          },
+                          onTap: () => _selectStartDate(context),
+                          decoration: InputDecoration(
+                            labelText: 'Event Start Date',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                          ),
+                          controller: eventStartDate,
                         ),
-          )
+                      ),
+                      new Flexible(
+                        child: TextFormField(
+                          readOnly: true,
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return 'Event start time cannot be empty';
+                            }
+                            return null;
+                          },
+                          onTap: () => _selectStartTime(context),
+                          decoration: InputDecoration(
+                            labelText: 'Event start time',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                          ),
+                          controller: eventStartTime,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child:
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    new Flexible(
-                      child: TextFormField(
-                        readOnly: true,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Event start date cannot be empty';
-                          }
-                          return null;
-                        },
-                        onTap: () => _selectStartDate(context),
-                        decoration: InputDecoration(
-                          labelText: 'Event Start Date',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                  child: Row(
+                    children: <Widget>[
+                      new Flexible(
+                        child: TextFormField(
+                          readOnly: true,
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return 'Event end date cannot be empty';
+                            }
+                            return null;
+                          },
+                          onTap: () => _selectEndDate(context),
+                          decoration: InputDecoration(
+                            labelText: 'Event End Date',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                          ),
+                          controller: eventEndDate,
                         ),
-                        controller: eventStartDate,
                       ),
-                    ),
-                    new Flexible(
-                      child: TextFormField(
-                        readOnly: true,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Event start time cannot be empty';
-                          }
-                          return null;
-                        },
-                        onTap: () => _selectStartTime(context),
-                        decoration: InputDecoration(
-                          labelText: 'Event start time',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
+                      new Flexible(
+                        child: TextFormField(
+                          readOnly: true,
+                          validator: (String value) {
+                            if (value.isEmpty) {
+                              return 'Event end time cannot be empty';
+                            }
+                            return null;
+                          },
+                          onTap: () => _selectEndTime(context),
+                          decoration: InputDecoration(
+                            labelText: 'Event End time',
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20.0)),
+                          ),
+                          controller: eventEndTime,
                         ),
-                        controller: eventStartTime,
                       ),
-                    ),
-                  ],
-                ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child:
-                Row(
-                  children: <Widget>[
-                    new Flexible(
-                      child: TextFormField(
-                        readOnly: true,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Event end date cannot be empty';
-                          }
-                          return null;
-                        },
-                        onTap: () => _selectEndDate(context),
-                        decoration: InputDecoration(
-                          labelText: 'Event End Date',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
-                        ),
-                        controller: eventEndDate,
-                      ),
-                    ),
-                    new Flexible(
-                      child: TextFormField(
-                        readOnly: true,
-                        validator: (String value) {
-                          if (value.isEmpty) {
-                            return 'Event end time cannot be empty';
-                          }
-                          return null;
-                        },
-                        onTap: () => _selectEndTime(context),
-                        decoration: InputDecoration(
-                          labelText: 'Event End time',
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20.0)),
-                        ),
-                        controller: eventEndTime,
-                      ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -365,10 +347,6 @@ if (pickedEndTime != null && pickedEndTime != selectedEndTime )
                 new ElevatedButton(
                   onPressed: _submitForm,
                   child: new Text("Create"),
-                ),
-                new ElevatedButton(
-                  onPressed: _deleteEvent,
-                  child: new Text("delete"),
                 ),
               ],
             )),

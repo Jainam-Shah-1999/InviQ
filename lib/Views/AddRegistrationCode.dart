@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'UpdateEvent.dart';
-
 class AddRegistrationCodePage extends StatefulWidget {
   @override
   _AddRegistrationCodePageState createState() =>
@@ -49,10 +47,6 @@ class _AddRegistrationCodePageState extends State<AddRegistrationCodePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _formkey.currentState.validate();
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new UpdateEventPage()));
         },
         child: Icon(Icons.done),
       ),

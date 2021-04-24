@@ -1,15 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
+//Pages
 import 'About.dart';
 import 'AllEvents.dart';
 import 'CreateEvent.dart';
-import 'UpdateEvent.dart';
 import 'AddRegistrationCode.dart';
-import 'Scanner.dart';
 
+//Models
 import 'package:flutter_application_1/Models/Event.dart';
+
+//widgets
+import 'package:flutter_application_1/Widgets/EventListCard_widget.dart';
 
 class Dashboard extends StatefulWidget {
   final FirebaseUser user;
@@ -31,18 +34,6 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  final List<Event> eventlist = [
-    Event("New York", "BirthDay", DateTime.now(), TimeOfDay.now(),
-        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
-    Event("New York1", "BirthDay", DateTime.now(), TimeOfDay.now(),
-        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
-    Event("New York2", "BirthDay", DateTime.now(), TimeOfDay.now(),
-        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
-    Event("New York3", "BirthDay", DateTime.now(), TimeOfDay.now(),
-        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
-    Event("New York4", "BirthDay", DateTime.now(), TimeOfDay.now(),
-        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
-  ];
   @override
   Widget build(BuildContext context) {
     final event =
@@ -59,27 +50,39 @@ class _DashboardState extends State<Dashboard> {
             flex: 0,
             child: Text(
               "Today's Events",
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 30.0),
             ),
           ),
           new Expanded(
-            child: new ListView.builder(
-                itemCount: eventlist.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildEventCard(context, index)),
+            child: StreamBuilder(
+                stream: getTodayEventsnapshot(context),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Text('Loading...');
+                  return new ListView.builder(
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          buildTodaysEventCard(
+                              context, snapshot.data.documents[index]));
+                }),
           ),
           new Expanded(
             flex: 0,
             child: new Text(
               "Upcoming Events",
-              style: TextStyle(fontSize: 25),
+              style: TextStyle(fontSize: 30.0),
             ),
           ),
           new Expanded(
-            child: new ListView.builder(
-                itemCount: eventlist.length,
-                itemBuilder: (BuildContext context, int index) =>
-                    buildEventCard(context, index)),
+            child: StreamBuilder(
+                stream: getUpcomingEventsnapshot(context),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Text('Loading...');
+                  return new ListView.builder(
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (BuildContext context, int index) =>
+                          buildUpcomingEventCard(
+                              context, snapshot.data.documents[index]));
+                }),
           )
         ],
       )),
@@ -152,7 +155,7 @@ class _DashboardState extends State<Dashboard> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            new AllEventsPage()));
+                            new AllEventsPage(user)));
               },
             ),
             new Divider(
@@ -185,78 +188,23 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  Widget buildEventCard(BuildContext context, int index) {
-    final event = eventlist[index];
-    return new Container(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                child: Row(children: <Widget>[
-                  Text(
-                    event.eventName,
-                    style: new TextStyle(fontSize: 22.0),
-                  ),
-                  Spacer(),
-                ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Text("Event type: " + event.eventType),
-                    Spacer(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.calendar_today),
-                    Text(
-                        "${DateFormat('dd/MM/yyyy').format(event.eventStartDate).toString()} - ${DateFormat('dd/MM/yyyy').format(event.eventEndDate).toString()}"),
-                    Spacer(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.watch_rounded),
-                    Text("${event.eventStartTime} - ${event.eventEndTime}"),
-                    Spacer(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.location_city),
-                    Text("Location: " + event.eventLocation),
-                    Spacer(),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
-                child: Row(
-                  children: <Widget>[
-                    Icon(Icons.people),
-                    Text("Invited Guests: " + event.numberOfGuests),
-                    Spacer(),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+  Stream<QuerySnapshot> getTodayEventsnapshot(BuildContext context) async* {
+    yield* Firestore.instance
+        .collection('InviQ')
+        .document(user.email)
+        .collection('event')
+        .where("eventStartDate", isLessThanOrEqualTo: DateTime.now().toString())
+        .orderBy('eventStartDate', descending : true)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getUpcomingEventsnapshot(BuildContext context) async* {
+    yield* Firestore.instance
+        .collection('InviQ')
+        .document(user.email)
+        .collection('event')
+        .orderBy('eventStartDate')
+        .where("eventStartDate", isGreaterThan: DateTime.now().toString())
+        .snapshots();
   }
 }
