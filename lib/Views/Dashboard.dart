@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 import 'About.dart';
@@ -30,24 +31,28 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+  final List<Event> eventlist = [
+    Event("New York", "BirthDay", DateTime.now(), TimeOfDay.now(),
+        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
+    Event("New York1", "BirthDay", DateTime.now(), TimeOfDay.now(),
+        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
+    Event("New York2", "BirthDay", DateTime.now(), TimeOfDay.now(),
+        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
+    Event("New York3", "BirthDay", DateTime.now(), TimeOfDay.now(),
+        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
+    Event("New York4", "BirthDay", DateTime.now(), TimeOfDay.now(),
+        DateTime.now(), TimeOfDay.now(), "Ahmedabad", "5", "car", "No Notes"),
+  ];
   @override
   Widget build(BuildContext context) {
-    final event = new Event(null, null, null, null, null, null, null, null);
+    final event =
+        new Event(null, null, null, null, null, null, null, null, null, null);
     return Scaffold(
       appBar: new AppBar(
         title: Text('InviQ'),
         backgroundColor: Color(0xff2E3791).withOpacity(0.5),
       ),
       body: Container(
-          // decoration: BoxDecoration(
-          //   gradient: LinearGradient(
-          //       begin: Alignment.topCenter,
-          //       end: Alignment.bottomCenter,
-          //       colors: [
-          //         Color(0xff2E3791).withOpacity(0.5),
-          //         Color(0xff2DABE2).withOpacity(0.4)
-          //       ]),
-          // ),
           child: Column(
         children: <Widget>[
           new Expanded(
@@ -58,7 +63,10 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           new Expanded(
-            child: _buildListView(),
+            child: new ListView.builder(
+                itemCount: eventlist.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    buildEventCard(context, index)),
           ),
           new Expanded(
             flex: 0,
@@ -68,7 +76,10 @@ class _DashboardState extends State<Dashboard> {
             ),
           ),
           new Expanded(
-            child: _buildListView2(),
+            child: new ListView.builder(
+                itemCount: eventlist.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    buildEventCard(context, index)),
           )
         ],
       )),
@@ -174,48 +185,78 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
-  ListView _buildListView() {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (_, index) {
-        return ListTile(
-          title: Text('Event $index'),
-          subtitle: Text('Event Notes'),
-          leading: Icon(Icons.circle),
-          trailing: IconButton(
-            icon: Icon(Icons.qr_code_scanner_outlined),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => new ScannerPage()));
-            },
+  Widget buildEventCard(BuildContext context, int index) {
+    final event = eventlist[index];
+    return new Container(
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                child: Row(children: <Widget>[
+                  Text(
+                    event.eventName,
+                    style: new TextStyle(fontSize: 22.0),
+                  ),
+                  Spacer(),
+                ]),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Text("Event type: " + event.eventType),
+                    Spacer(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.calendar_today),
+                    Text(
+                        "${DateFormat('dd/MM/yyyy').format(event.eventStartDate).toString()} - ${DateFormat('dd/MM/yyyy').format(event.eventEndDate).toString()}"),
+                    Spacer(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.watch_rounded),
+                    Text("${event.eventStartTime} - ${event.eventEndTime}"),
+                    Spacer(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.location_city),
+                    Text("Location: " + event.eventLocation),
+                    Spacer(),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0, bottom: 8.0),
+                child: Row(
+                  children: <Widget>[
+                    Icon(Icons.people),
+                    Text("Invited Guests: " + event.numberOfGuests),
+                    Spacer(),
+                  ],
+                ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
-
-  ListView _buildListView2() {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (_, index) {
-        return ListTile(
-          leading: Icon(Icons.circle),
-          title: Text('Event $index'),
-          subtitle: Text('Event Notes'),
-          trailing: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          new UpdateEventPage()));
-            },
-          ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
