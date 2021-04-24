@@ -197,7 +197,7 @@ class _DashboardState extends State<Dashboard> {
         .orderBy('eventStartDate', descending : true)
         .snapshots();
   }
-
+// comment
   Stream<QuerySnapshot> getUpcomingEventsnapshot(BuildContext context) async* {
     yield* Firestore.instance
         .collection('InviQ')
