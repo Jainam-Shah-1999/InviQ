@@ -1,4 +1,4 @@
-# flutter_application_1
+# InviQ
 
 A new Flutter project.
 
