@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/Models/Event.dart';
 import 'package:flutter_application_1/Views/AddGuest.dart';
 
 //widgets
@@ -38,7 +37,7 @@ class _AllGuestsState extends State<AllGuests> {
                         itemCount: snapshot.data.documents.length,
                         itemBuilder: (BuildContext context, int index) =>
                             buildAllGuestsCard(
-                                context, snapshot.data.documents[index]));
+                                context, snapshot.data.documents[index], documentId, user));
                   }),
             ),
           ],

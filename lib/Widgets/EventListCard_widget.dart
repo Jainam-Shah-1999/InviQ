@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/Models/Event.dart';
 import 'package:flutter_application_1/Views/AllGuests.dart';
+import 'package:flutter_application_1/Views/InvitationCard.dart';
 import 'package:flutter_application_1/Views/Scanner.dart';
 import 'package:flutter_application_1/Views/UpdateEvent.dart';
 import 'package:intl/intl.dart';
@@ -332,7 +333,7 @@ Widget buildEventCardForUpdate(
   );
 }
 
-Widget buildAllGuestsCard(BuildContext context, DocumentSnapshot guest) {
+Widget buildAllGuestsCard(BuildContext context, DocumentSnapshot guest, String documentId, FirebaseUser user) {
   return new Container(
     child: Card(
       child: InkWell(
@@ -386,7 +387,7 @@ Widget buildAllGuestsCard(BuildContext context, DocumentSnapshot guest) {
         onTap: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (BuildContext context) => new ScannerPage())),
+                builder: (BuildContext context) => new InvitationCard(guest.documentID, documentId, user))),
       ),
     ),
   );
