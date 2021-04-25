@@ -121,7 +121,7 @@ class _DashboardState extends State<Dashboard> {
                     context,
                     new MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            new AddRegistrationCodePage()));
+                            new AddRegistrationCodePage(user)));
               },
             ),
             new Divider(

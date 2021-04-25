@@ -25,13 +25,6 @@ class _AllEventsPageState extends State<AllEventsPage> {
           child: Column(
         children: <Widget>[
           new Expanded(
-            flex: 0,
-            child: new Text(
-              "All Events",
-              style: TextStyle(fontSize: 30.0),
-            ),
-          ),
-          new Expanded(
             child: StreamBuilder(
                 stream: getEventsnapshot(context),
                 builder: (context, snapshot) {
