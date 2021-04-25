@@ -10,7 +10,8 @@ class UpdateEventPage extends StatefulWidget {
   final Event event;
   UpdateEventPage({Key key, @required this.event, this.user, this.documentId});
   @override
-  _UpdateEventPageState createState() => _UpdateEventPageState(key: key, event: event, user: user, documentId: documentId);
+  _UpdateEventPageState createState() => _UpdateEventPageState(
+      key: key, event: event, user: user, documentId: documentId);
 }
 
 class _UpdateEventPageState extends State<UpdateEventPage> {
@@ -18,13 +19,18 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
   final FirebaseUser user;
   final String documentId;
   final Event event;
-  _UpdateEventPageState({Key key, @required this.event, this.user, this.documentId});
+  _UpdateEventPageState(
+      {Key key, @required this.event, this.user, this.documentId});
 
   //datetime declaration
   DateTime minDate = DateTime.now();
+  bool isStartDateUpdated = false;
   DateTime selectedStartDate = DateTime.now();
+  bool isEndDateUpdated = false;
   DateTime selectedEndDate = DateTime.now();
+  bool isStartTimeUpdated = false;
   TimeOfDay selectedStartTime = TimeOfDay.now();
+  bool isEndTimeUpdated = false;
   TimeOfDay selectedEndTime = TimeOfDay.now();
 
   Future<Null> _selectStartDate(BuildContext context) async {
@@ -33,10 +39,12 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
         initialDate: minDate,
         firstDate: minDate,
         lastDate: DateTime(2100));
-    if (startDatepicked != null && startDatepicked != selectedStartDate)
+    if (startDatepicked != null && startDatepicked != selectedStartDate) {
+      isStartDateUpdated = true;
       setState(() {
         selectedStartDate = startDatepicked;
       });
+    }
   }
 
   Future<void> _selectStartTime(BuildContext context) async {
@@ -50,10 +58,12 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
           );
         });
 
-    if (pickedStartTime != null && pickedStartTime != selectedStartTime)
+    if (pickedStartTime != null && pickedStartTime != selectedStartTime) {
+      isStartTimeUpdated = true;
       setState(() {
         selectedStartTime = pickedStartTime;
       });
+    }
   }
 
   Future<Null> _selectEndDate(BuildContext context) async {
@@ -62,10 +72,12 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
         initialDate: minDate,
         firstDate: minDate,
         lastDate: DateTime(2100));
-    if (endDatepicked != null && endDatepicked != selectedEndDate)
+    if (endDatepicked != null && endDatepicked != selectedEndDate) {
+      isEndDateUpdated = true;
       setState(() {
         selectedEndDate = endDatepicked;
       });
+    }
   }
 
   Future<void> _selectEndTime(BuildContext context) async {
@@ -79,10 +91,12 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
           );
         });
 
-    if (pickedEndTime != null && pickedEndTime != selectedEndTime)
+    if (pickedEndTime != null && pickedEndTime != selectedEndTime) {
+      isEndTimeUpdated = true;
       setState(() {
         selectedEndTime = pickedEndTime;
       });
+    }
   }
 
 // DD Menu for event type
@@ -104,29 +118,45 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
     TextEditingController numberOfGuests = new TextEditingController();
     TextEditingController invitationType = new TextEditingController();
     TextEditingController notes = new TextEditingController();
-    
+
     documentReference.get().then((datasnapshot) {
       if (datasnapshot.exists) {
+        var starttime =
+            datasnapshot.data['eventStartTime'].toString().substring(10, 15);
+        var endtime =
+            datasnapshot.data['eventEndTime'].toString().substring(10, 15);
+
+        if (!isStartDateUpdated) {
+          selectedStartDate =
+              DateTime.parse(datasnapshot.data['eventStartDate']);
+        }
+        if (!isStartTimeUpdated) {
+          selectedStartTime = TimeOfDay(
+              hour: int.parse(starttime.split(':')[0]),
+              minute: int.parse(starttime.split(':')[1]));
+        }
+        if (!isEndDateUpdated) {
+          selectedEndDate = DateTime.parse(datasnapshot.data['eventEndDate']);
+        }
+        if (!isEndTimeUpdated) {
+          selectedEndTime = TimeOfDay(
+              hour: int.parse(endtime.split(':')[0]),
+              minute: int.parse(endtime.split(':')[1]));
+        }
         var selectedstartdate = selectedStartDate.toString().substring(0, 10);
-        var startdate =
-            datasnapshot.data['eventStartDate'].toString().substring(0, 10);
         var selectedstarttime = selectedStartTime.toString().substring(10, 15);
-        var starttime = datasnapshot.data['eventStartTime'].toString().substring(10,15);
         var selectedenddate = selectedEndDate.toString().substring(0, 10);
-        var enddate =
-            datasnapshot.data['eventEndDate'].toString().substring(0, 10);
         var selectedendtime = selectedEndTime.toString().substring(10, 15);
-        var endtime = datasnapshot.data['eventEndTime'].toString().substring(10,15);
-        if (eventTypeValue != datasnapshot.data['eventType']){
+        if (eventTypeValue != datasnapshot.data['eventType']) {
           setState(() {
-        eventTypeValue = datasnapshot.data['eventType'];
-      });
+            eventTypeValue = datasnapshot.data['eventType'];
+          });
         }
         eventName.text = datasnapshot.data['eventName'];
-        eventStartDate.text = startdate == selectedstartdate ? startdate : selectedstartdate;
-        eventStartTime.text = starttime == selectedstarttime ? starttime : selectedstarttime;
-        eventEndDate.text = enddate == selectedenddate ? enddate : selectedenddate;
-        eventEndTime.text = endtime == selectedendtime ? endtime : selectedendtime;
+        eventStartDate.text = selectedstartdate;
+        eventStartTime.text = selectedstarttime;
+        eventEndDate.text = selectedenddate;
+        eventEndTime.text = selectedendtime;
         eventLocation.text = datasnapshot.data['eventLocation'];
         numberOfGuests.text = datasnapshot.data['numberOfGuests'];
         invitationType.text = datasnapshot.data['invitationType'];
@@ -157,6 +187,7 @@ class _UpdateEventPageState extends State<UpdateEventPage> {
         }
       }
     }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Update Event'),
