@@ -32,7 +32,7 @@ class _AllEventsPageState extends State<AllEventsPage> {
                   return new ListView.builder(
                       itemCount: snapshot.data.documents.length,
                       itemBuilder: (BuildContext context, int index) =>
-                          buildEventCardForUpdate(
+                          buildEventCardForAllEvent(
                               context, snapshot.data.documents[index], user));
                 }),
           ),

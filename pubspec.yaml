@@ -35,6 +35,8 @@ dependencies:
   google_sign_in:
   cloud_firestore:
   intl:
+  screenshot:
+  share:
 
 dev_dependencies:
   flutter_test:

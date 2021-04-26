@@ -81,7 +81,7 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: snapshot.data.documents.length,
                       itemBuilder: (BuildContext context, int index) =>
                           buildUpcomingEventCard(
-                              context, snapshot.data.documents[index]));
+                              context, snapshot.data.documents[index], user));
                 }),
           )
         ],
