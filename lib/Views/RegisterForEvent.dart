@@ -3,19 +3,19 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AddGuest extends StatefulWidget {
+class RegisterForEvent extends StatefulWidget {
   final FirebaseUser user;
   final String documentId;
-  AddGuest(this.user, this.documentId);
+  RegisterForEvent(this.user, this.documentId);
   @override
-  _AddGuestState createState() => _AddGuestState(user, documentId);
+  _RegisterForEventState createState() => _RegisterForEventState(user, documentId);
 }
 
-class _AddGuestState extends State<AddGuest> {
+class _RegisterForEventState extends State<RegisterForEvent> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseUser user;
   final String documentId;
-  _AddGuestState(this.user, this.documentId);
+  _RegisterForEventState(this.user, this.documentId);
   @override
   Widget build(BuildContext context) {
     final documentReference = Firestore.instance
@@ -40,9 +40,23 @@ class _AddGuestState extends State<AddGuest> {
         };
         try {
           documentReference.add(data).whenComplete(() {
-            print("Guest Added!");
-            Navigator.of(context).pop();
-          });
+            print("Guest registred!");
+            showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text("Successful"),
+            content: Text(
+                "Registeration for Event "),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: Text("Go to Homepage"),
+              ),
+            ],
+          ));          });
         } on Exception {
           print(Exception);
         }
@@ -51,7 +65,7 @@ class _AddGuestState extends State<AddGuest> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Add Guest'),
+          title: Text('Register For an Event'),
         ),
         body: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
@@ -71,7 +85,7 @@ class _AddGuestState extends State<AddGuest> {
                         return null;
                       },
                       decoration: InputDecoration(
-                        labelText: 'Guest Name',
+                        labelText: 'Name',
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                       ),
@@ -89,7 +103,7 @@ class _AddGuestState extends State<AddGuest> {
                       },
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelText: "Guest's Contact Number",
+                        labelText: "Contact Number",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                       ),
@@ -107,7 +121,7 @@ class _AddGuestState extends State<AddGuest> {
                       },
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                        labelText: "Guest's email",
+                        labelText: "email",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                       ),
@@ -116,7 +130,7 @@ class _AddGuestState extends State<AddGuest> {
                   ),
                   new ElevatedButton(
                     onPressed: _submitForm,
-                    child: new Text("Add guest"),
+                    child: new Text("Register"),
                   ),
                 ]))));
   }

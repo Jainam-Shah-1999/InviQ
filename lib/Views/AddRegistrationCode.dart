@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'AddGuest.dart';
+import 'RegisterForEvent.dart';
 
 class AddRegistrationCodePage extends StatefulWidget {
   final FirebaseUser user;
@@ -26,7 +26,7 @@ class _AddRegistrationCodePageState extends State<AddRegistrationCodePage> {
             context,
             new MaterialPageRoute(
                 builder: (BuildContext context) =>
-                    new AddGuest(user, eventId.text)));
+                    new RegisterForEvent(user, eventId.text)));
       }
     }
 
