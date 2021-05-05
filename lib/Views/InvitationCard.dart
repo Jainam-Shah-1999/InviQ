@@ -106,10 +106,17 @@ class _InvitationCardState extends State<InvitationCard> {
         guestName.text = guestDatasnapshot.data['guestName'];
       }
     });
-    Map<String, String> data = <String, String>{
-      "eventId": eventDocumentId,
-      "guestId": guestDocumentId,
-    };
+    String data = '{' +
+        '"eventId":' +
+        '"' +
+        eventDocumentId +
+        '"' +
+        ',' +
+        '"guestId":' +
+        '"' +
+        guestDocumentId +
+        '"' +
+        '}';
 
     void _takeScreenshot() async {
       final filePath = (await getExternalStorageDirectory()).path;
@@ -257,7 +264,7 @@ class _InvitationCardState extends State<InvitationCard> {
                       Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: QrImage(
-                            data: data.toString(),
+                            data: data,
                             size: 150.0,
                           )),
                     ]),

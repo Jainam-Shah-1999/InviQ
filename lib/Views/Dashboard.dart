@@ -62,7 +62,7 @@ class _DashboardState extends State<Dashboard> {
                       itemCount: snapshot.data.documents.length,
                       itemBuilder: (BuildContext context, int index) =>
                           buildTodaysEventCard(
-                              context, snapshot.data.documents[index]));
+                              context, snapshot.data.documents[index], user));
                 }),
           ),
           new Expanded(
@@ -194,9 +194,10 @@ class _DashboardState extends State<Dashboard> {
         .document(user.email)
         .collection('event')
         .where("eventStartDate", isLessThanOrEqualTo: DateTime.now().toString())
-        .orderBy('eventStartDate', descending : true)
+        .orderBy('eventStartDate', descending: true)
         .snapshots();
   }
+
 // comment
   Stream<QuerySnapshot> getUpcomingEventsnapshot(BuildContext context) async* {
     yield* Firestore.instance

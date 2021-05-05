@@ -10,6 +10,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:share/share.dart';
 
 void _deleteEvent(String documentId, FirebaseUser user) {
+  final documentReferenceforGuest = Firestore.instance
+      .collection('InviQ')
+      .document(user.email)
+      .collection('event')
+      .document(documentId)
+      .collection('guest')
+      .getDocuments()
+      .then((snapshot) {
+    for (DocumentSnapshot ds in snapshot.documents) {
+      ds.reference.delete();
+    }
+  });
   final documentReference = Firestore.instance
       .collection('InviQ')
       .document(user.email)
@@ -33,13 +45,15 @@ void _deleteGuest(String documentId, String eventId, FirebaseUser user) {
   }).catchError((e) => print(e));
 }
 
-void _shareEventCode(String eventCode, String eventName){
+void _shareEventCode(String eventCode, String eventName) {
   Share.share('Register for $eventName with Event Code:' + eventCode);
 }
+
 final eventModel =
     new Event(null, null, null, null, null, null, null, null, null, null);
 
-Widget buildTodaysEventCard(BuildContext context, DocumentSnapshot event) {
+Widget buildTodaysEventCard(
+    BuildContext context, DocumentSnapshot event, FirebaseUser user) {
   return new Container(
     child: Card(
       child: InkWell(
@@ -123,13 +137,14 @@ Widget buildTodaysEventCard(BuildContext context, DocumentSnapshot event) {
         onTap: () => Navigator.push(
             context,
             new MaterialPageRoute(
-                builder: (BuildContext context) => new ScannerPage())),
+                builder: (BuildContext context) => new ScannerPage(user))),
       ),
     ),
   );
 }
 
-Widget buildUpcomingEventCard(BuildContext context, DocumentSnapshot event, FirebaseUser user) {
+Widget buildUpcomingEventCard(
+    BuildContext context, DocumentSnapshot event, FirebaseUser user) {
   String eventname = event['eventName'];
   return new Container(
     child: Card(
@@ -211,7 +226,7 @@ Widget buildUpcomingEventCard(BuildContext context, DocumentSnapshot event, Fire
             ],
           ),
         ),
-       onLongPress: () => showDialog(
+        onLongPress: () => showDialog(
           context: context,
           builder: (context) => AlertDialog(
             title: Text("Choose any Action"),
@@ -258,7 +273,8 @@ Widget buildUpcomingEventCard(BuildContext context, DocumentSnapshot event, Fire
                 child: Text("Delete Event"),
               ),
             ],
-          ),),
+          ),
+        ),
       ),
     ),
   );
@@ -266,7 +282,7 @@ Widget buildUpcomingEventCard(BuildContext context, DocumentSnapshot event, Fire
 
 Widget buildEventCardForAllEvent(
     BuildContext context, DocumentSnapshot event, FirebaseUser user) {
-      String eventname = event['eventName'];
+  String eventname = event['eventName'];
   return new Container(
     child: Card(
       child: InkWell(
