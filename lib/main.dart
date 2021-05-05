@@ -44,7 +44,7 @@ void redirect() async {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              'Sign In',
+              'Welcome to InviQ',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 30.0,
@@ -54,7 +54,20 @@ void redirect() async {
             SizedBox(height: 48.0),
             new ElevatedButton(
               onPressed: () => auth.signInWithGoogle().then((value) => redirect()),
-              child: new Text("Login with Google"),
+              child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Image.asset('images/google-logo.png'),
+              Text(
+                'Sign in with Google',
+                style: TextStyle(color: Colors.black87, fontSize: 15.0),
+              ),
+              Opacity(
+                opacity: 0.0,
+                child: Image.asset('images/google-logo.png'),
+              ),
+            ],
+          ),
             ),
           ],
         ),
