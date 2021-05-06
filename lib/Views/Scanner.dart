@@ -54,7 +54,7 @@ class _ScannerPageState extends State<ScannerPage> {
     try {
       String barcode = await BarcodeScanner.scan();
       setState(() => this.barcode = barcode);
-      authenticateGuest();
+      showAlertDialog(context);
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
@@ -71,7 +71,7 @@ class _ScannerPageState extends State<ScannerPage> {
     }
   }
 
-  authenticateGuest() async {
+  showAlertDialog(BuildContext context) async {
     String data = this.barcode;
     final dataToJson = jsonDecode(data);
     var a = Firestore.instance
@@ -83,19 +83,32 @@ class _ScannerPageState extends State<ScannerPage> {
         .document(dataToJson["guestId"])
         .snapshots()
         .isEmpty;
+    // Create AlertDialog
     if (await a) {
       print('guest not authorized');
-      AlertDialog(
+      AlertDialog alert = AlertDialog(
         title: Text('Authorization Alert'),
         content: Text('Guest is Not Authenticated!'),
         backgroundColor: Colors.red,
       );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
     } else {
       print('guest authorized');
-      AlertDialog(
+      AlertDialog alert = AlertDialog(
         title: Text('Authorization Alert'),
-        content: Text('Guest Authenticated!'),
+        content: Text('Guest is Authenticated!'),
         backgroundColor: Colors.green,
+      );
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
       );
     }
   }

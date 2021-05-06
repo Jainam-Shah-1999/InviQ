@@ -142,132 +142,141 @@ class _InvitationCardState extends State<InvitationCard> {
                 child: Screenshot(
                   controller: _screenshotController,
                   child: Card(
-                    child: Column(children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('You Are Invited!',
-                            style: TextStyle(fontSize: 30.0)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          readOnly: true,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            labelText: 'Guest Name:',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                          ),
-                          controller: guestName,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          repeat: ImageRepeat.repeatY,
+                          alignment: Alignment.topCenter,
+                          image: AssetImage('images/invitations/invi5.png'),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: 'Event Name:',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(360.0)),
-                          ),
-                          controller: eventName,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: 'Event Type',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                          ),
-                          controller: eventType,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            new Flexible(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Event Start Date',
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                ),
-                                controller: eventStartDate,
-                              ),
-                            ),
-                            new Flexible(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Event start time',
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                ),
-                                controller: eventStartTime,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: <Widget>[
-                            new Flexible(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Event End Date',
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                ),
-                                controller: eventEndDate,
-                              ),
-                            ),
-                            new Flexible(
-                              child: TextFormField(
-                                readOnly: true,
-                                decoration: InputDecoration(
-                                  labelText: 'Event End time',
-                                  border: OutlineInputBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(20.0)),
-                                ),
-                                controller: eventEndTime,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                            labelText: 'Event Place',
-                            hintText: '440 Banquets',
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20.0)),
-                          ),
-                          controller: eventLocation,
-                        ),
-                      ),
-                      Padding(
+                      child: Column(children: <Widget>[
+                        Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: QrImage(
-                            data: data,
-                            size: 150.0,
-                          )),
-                    ]),
+                          child: Text('You Are Invited!',
+                              style: TextStyle(fontSize: 30.0)),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Guest Name:',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            ),
+                            controller: guestName,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: 'Event Name:',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(360.0)),
+                            ),
+                            controller: eventName,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: 'Event Type',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            ),
+                            controller: eventType,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              new Flexible(
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Event Start Date',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  ),
+                                  controller: eventStartDate,
+                                ),
+                              ),
+                              new Flexible(
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Event start time',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  ),
+                                  controller: eventStartTime,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: <Widget>[
+                              new Flexible(
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Event End Date',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  ),
+                                  controller: eventEndDate,
+                                ),
+                              ),
+                              new Flexible(
+                                child: TextFormField(
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    labelText: 'Event End time',
+                                    border: OutlineInputBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0)),
+                                  ),
+                                  controller: eventEndTime,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            decoration: InputDecoration(
+                              labelText: 'Event Place',
+                              hintText: '440 Banquets',
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20.0)),
+                            ),
+                            controller: eventLocation,
+                          ),
+                        ),
+                        Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: QrImage(
+                              data: data,
+                              size: 150.0,
+                            )),
+                      ]),
+                    ),
                   ),
                 ),
               ),
