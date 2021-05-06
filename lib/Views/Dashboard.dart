@@ -41,51 +41,53 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       appBar: new AppBar(
         title: Text('InviQ'),
-        backgroundColor: Color(0xff2E3791).withOpacity(0.5),
       ),
-      body: Container(
-          child: Column(
-        children: <Widget>[
-          new Expanded(
-            flex: 0,
-            child: Text(
-              "Today's Events",
-              style: TextStyle(fontSize: 30.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Container(
+            child: Column(
+          children: <Widget>[
+            new Expanded(
+              flex: 0,
+              child: Text(
+                "Today's Events",
+                style: TextStyle(fontSize: 30.0),
+              ),
             ),
-          ),
-          new Expanded(
-            child: StreamBuilder(
-                stream: getTodayEventsnapshot(context),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const Text('Loading...');
-                  return new ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          buildTodaysEventCard(
-                              context, snapshot.data.documents[index], user));
-                }),
-          ),
-          new Expanded(
-            flex: 0,
-            child: new Text(
-              "Upcoming Events",
-              style: TextStyle(fontSize: 30.0),
+            new Expanded(
+              child: StreamBuilder(
+                  stream: getTodayEventsnapshot(context),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const Text('Loading...');
+                    return new ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            buildTodaysEventCard(
+                                context, snapshot.data.documents[index], user));
+                  }),
             ),
-          ),
-          new Expanded(
-            child: StreamBuilder(
-                stream: getUpcomingEventsnapshot(context),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) return const Text('Loading...');
-                  return new ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (BuildContext context, int index) =>
-                          buildUpcomingEventCard(
-                              context, snapshot.data.documents[index], user));
-                }),
-          )
-        ],
-      )),
+            new Expanded(
+              flex: 0,
+              child: new Text(
+                "Upcoming Events",
+                style: TextStyle(fontSize: 30.0),
+              ),
+            ),
+            new Expanded(
+              child: StreamBuilder(
+                  stream: getUpcomingEventsnapshot(context),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) return const Text('Loading...');
+                    return new ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (BuildContext context, int index) =>
+                            buildUpcomingEventCard(
+                                context, snapshot.data.documents[index], user));
+                  }),
+            )
+          ],
+        )),
+      ),
       drawer: new Drawer(
         child: ListView(
           children: <Widget>[

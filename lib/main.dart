@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_1/Views/Dashboard.dart';
 import 'package:flutter_application_1/Service/Auth_Service.dart';
+import 'package:flutter_application_1/CommonWidgets/social_sign_in_button.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,6 +13,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          primarySwatch: Colors.indigo,
+        ),
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
@@ -52,23 +56,13 @@ void redirect() async {
               ),
             ),
             SizedBox(height: 48.0),
-            new ElevatedButton(
-              onPressed: () => auth.signInWithGoogle().then((value) => redirect()),
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Image.asset('images/google-logo.png'),
-              Text(
-                'Sign in with Google',
-                style: TextStyle(color: Colors.black87, fontSize: 15.0),
-              ),
-              Opacity(
-                opacity: 0.0,
-                child: Image.asset('images/google-logo.png'),
-              ),
-            ],
+            SocialSignInButton(
+            assetName: 'images/google-logo.png',
+            text: 'Sign in with Google',
+            textColor: Colors.black87,
+            color: Colors.white,
+            onPressed: () => auth.signInWithGoogle().then((value) => redirect()),
           ),
-            ),
           ],
         ),
       ),
